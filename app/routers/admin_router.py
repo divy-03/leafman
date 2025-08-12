@@ -3,7 +3,8 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from typing import List
 
-from app import database, dependencies, models, schemas
+from app import database, dependencies, models
+from app.schemas import user_schemas, leave_schemas
 from app.services import admin_service, leave_service
 
 router = APIRouter(
@@ -12,15 +13,15 @@ router = APIRouter(
     dependencies=[Depends(dependencies.get_current_admin_user)]
 )
 
-@router.post("/users", response_model=schemas.user_schemas.UserResponse, status_code=201)
+@router.post("/users", response_model=user_schemas.UserResponse, status_code=201)
 def add_new_user(
-    user: schemas.user_schemas.UserCreate,
+    user: user_schemas.UserCreate,
     db: Session = Depends(database.get_db)
 ):
     # Logic to create user and initialize balances
     return admin_service.create_user(db=db, user=user)
 
-@router.get("/leave-requests", response_model=List[schemas.leave_schemas.LeaveRequestResponse])
+@router.get("/leave-requests", response_model=List[leave_schemas.LeaveRequestResponse])
 def list_all_leave_requests(
     db: Session = Depends(database.get_db),
     status: str | None = None,
@@ -34,10 +35,10 @@ def list_all_leave_requests(
     offset = (page - 1) * limit
     return query.offset(offset).limit(limit).all()
 
-@router.patch("/leave-requests/{request_id}", response_model=schemas.leave_schemas.LeaveRequestResponse)
+@router.patch("/leave-requests/{request_id}", response_model=leave_schemas.LeaveRequestResponse)
 def update_leave_request_status(
     request_id: int,
-    approval: schemas.leave_schemas.LeaveApproval,
+    approval: leave_schemas.LeaveApproval,
     db: Session = Depends(database.get_db),
     admin_user: models.all_models.User = Depends(dependencies.get_current_admin__user)
 ):
