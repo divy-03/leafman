@@ -19,7 +19,7 @@ RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 # --- Final Stage ---
 # Create a new, clean image
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Create a non-root user
 RUN adduser \
