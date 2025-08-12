@@ -3,14 +3,15 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from typing import List
 
-from app import database, dependencies, models
+from app import database, models
+from app.dependencies import get_current_admin_user
 from app.schemas import user_schemas, leave_schemas
 from app.services import admin_service, leave_service
 
 router = APIRouter(
     prefix="/admin",
     tags=["Admin"],
-    dependencies=[Depends(dependencies.get_current_admin_user)]
+    dependencies=[Depends(get_current_admin_user)]
 )
 
 @router.post("/users", response_model=user_schemas.UserResponse, status_code=201)
@@ -40,6 +41,6 @@ def update_leave_request_status(
     request_id: int,
     approval: leave_schemas.LeaveApproval,
     db: Session = Depends(database.get_db),
-    admin_user: models.all_models.User = Depends(dependencies.get_current_admin__user)
+    admin_user: models.all_models.User = Depends(get_current_admin_user)
 ):
     return leave_service.process_leave_request(db, request_id, approval, admin_user)
