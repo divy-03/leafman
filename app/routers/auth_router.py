@@ -4,7 +4,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
 
-from app import database, models, schemas
+from app import database, models
+from app.schemas import token_schemas
 from app.services import auth_service
 from app.config import settings
 
@@ -13,7 +14,7 @@ router = APIRouter(
     tags=["Authentication"]
 )
 
-@router.post("/token", response_model=schemas.token_schemas.Token)
+@router.post("/token", response_model=token_schemas.Token)
 def login_for_access_token(db: Session = Depends(database.get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = db.query(models.all_models.User).filter(models.all_models.User.email == form_data.username).first()
     if not user or not auth_service.verify_password(form_data.password, user.password_hash):
