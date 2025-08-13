@@ -42,6 +42,7 @@ RUN pip install --no-cache /wheels/*
 COPY ./app ./app
 COPY ./alembic ./alembic
 COPY alembic.ini .
+COPY seed.py
 
 # Change ownership to the non-root user
 RUN chown -R appuser:appuser /usr/src/app
