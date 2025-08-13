@@ -17,8 +17,7 @@ config = context.config
 db_url = os.environ.get('DATABASE_URL')
 if not db_url:
     raise ValueError("DATABASE_URL environment variable is not set!")
-config.set_main_option('sqlalchemy.url', db_url)
-
+config.set_main_option('sqlalchemy.url', db_url.replace('%', '%%'))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
