@@ -21,7 +21,11 @@ class User(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
     
     department = relationship("Department")
-    leave_requests = relationship("LeaveRequest", back_populates="user")
+    leave_requests = relationship(
+        "LeaveRequest",
+        foreign_keys="[LeaveRequest.user_id]",
+        back_populates="user"
+    )
     leave_balances = relationship("LeaveBalance", back_populates="user")
 
 class Department(Base):
@@ -65,9 +69,18 @@ class LeaveRequest(Base):
     approved_by = Column(Integer, ForeignKey('users.user_id'), nullable=True)
     approval_note = Column(TEXT)
     
-    user = relationship("User", back_populates="leave_requests")
+    user = relationship(
+        "User",
+        foreign_keys=[user_id],
+        back_populates="leave_requests"
+    )
+
     leave_type = relationship("LeaveType")
-    approver = relationship("User", foreign_keys=[approved_by])
+    approver = relationship(
+        "User",
+        foreign_keys=[approved_by]
+    )
+
 
 class Holiday(Base):
     __tablename__ = 'holidays'
