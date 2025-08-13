@@ -21,6 +21,8 @@ RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
 # Create a new, clean image
 FROM python:3.13-slim
 
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Create a non-root user
 RUN adduser \
     --disabled-password \
