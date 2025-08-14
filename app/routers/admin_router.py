@@ -53,6 +53,10 @@ def create_leave_type(
     db.refresh(db_leave_type)
     return db_leave_type
 
+@router.get("/departments/", response_model=List[schemas.leave_schemas.DepartmentResponse])
+def list_departments(db: Session = Depends(database.get_db)):
+    return db.query(models.all_models.Department).all()
+
 @router.post("/departments", response_model=schemas.leave_schemas.DepartmentResponse, status_code=201)
 def create_department(
     department: schemas.leave_schemas.DepartmentCreate,
