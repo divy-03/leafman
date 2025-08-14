@@ -9,3 +9,4 @@ python-jose[cryptography]
 passlib[bcrypt]
 alembic
 python-multipart
+requests # for the cli only
