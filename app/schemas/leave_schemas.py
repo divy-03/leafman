@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
 from decimal import Decimal
+from .user_schemas import UserInLeaveRequestResponse
 
 # Schemas for LeaveType
 class LeaveTypeBase(BaseModel):
@@ -65,5 +66,18 @@ class DepartmentCreate(DepartmentBase):
 
 class DepartmentResponse(DepartmentBase):
     department_id: int
+    class Config:
+        from_attributes = True
+
+class AdminLeaveRequestResponse(BaseModel):
+    request_id: int
+    user: UserInLeaveRequestResponse 
+    leave_type: LeaveTypeResponse
+    start_date: date
+    end_date: date
+    total_days: Decimal
+    status: str
+    reason: Optional[str] = None
+
     class Config:
         from_attributes = True

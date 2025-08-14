@@ -21,3 +21,11 @@ class UserResponse(UserBase):
 
     class Config:
         from_attributes = True
+
+class UserInLeaveRequestResponse(BaseModel):
+    user_id: int
+    first_name: str
+    last_name: str
+
+    class Config:
+        from_attributes = True
