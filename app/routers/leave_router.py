@@ -27,11 +27,21 @@ def create_leave_request(
 @router.get("/", response_model=List[schemas.leave_schemas.LeaveRequestResponse])
 def get_my_leave_requests(
     db: Session = Depends(database.get_db),
-    current_user: models.all_models.User = Depends(dependencies.get_current_user),
-    page: int = Query(1, ge=1),  # <-- THE MISSING PARAMETER
+    # ==========================================================
+    # TEMPORARILY COMMENTED OUT FOR DEBUGGING
+    # current_user: models.all_models.User = Depends(dependencies.get_current_user),
+    # ==========================================================
+    page: int = Query(1, ge=1),
     limit: int = Query(20, le=100)
 ):
     offset = (page - 1) * limit
-    return db.query(models.all_models.LeaveRequest).filter(
-        models.all_models.LeaveRequest.user_id == current_user.user_id
-    ).offset(offset).limit(limit).all()
+    # ==========================================================
+    # TEMPORARILY RETURN ALL REQUESTS, IGNORING THE USER
+    print("[SERVER DEBUG] Auth disabled for this endpoint. Returning all requests.")
+    return db.query(models.all_models.LeaveRequest).offset(offset).limit(limit).all()
+    # ==========================================================
+
+    # Original code to restore later:
+    # return db.query(models.all_models.LeaveRequest).filter(
+    #     models.all_models.LeaveRequest.user_id == current_user.user_id
+    # ).offset(offset).limit(limit).all()
