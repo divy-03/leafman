@@ -7,6 +7,7 @@ from app import database, models
 from app.dependencies import get_current_admin_user
 from app.schemas import user_schemas, leave_schemas
 from app.services import admin_service, leave_service
+from app.schemas.leave_schemas import DepartmentCreate, DepartmentResponse, LeaveTypeCreate, LeaveTypeResponse
 
 router = APIRouter(
     prefix="/admin",
@@ -44,3 +45,25 @@ def update_leave_request_status(
     admin_user: models.all_models.User = Depends(get_current_admin_user)
 ):
     return leave_service.process_leave_request(db, request_id, approval, admin_user)
+
+@router.post("/leave-types", response_model=LeaveTypeResponse, status_code=201)
+def create_leave_type(
+    leave_type: LeaveTypeCreate,
+    db: Session = Depends(database.get_db)
+):
+    db_leave_type = models.all_models.LeaveType(**leave_type.model_dump())
+    db.add(db_leave_type)
+    db.commit()
+    db.refresh(db_leave_type)
+    return db_leave_type
+
+@router.post("/departments", response_model=DepartmentResponse, status_code=201)
+def create_department(
+    department: DepartmentCreate,
+    db: Session = Depends(database.get_db)
+):
+    db_department = models.all_models.Department(**department.model_dump())
+    db.add(db_department)
+    db.commit()
+    db.refresh(db_department)
+    return db_department

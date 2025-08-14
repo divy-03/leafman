@@ -56,3 +56,14 @@ class LeaveBalanceResponse(BaseModel):
 class LeaveApproval(BaseModel):
     status: str # "Approved" or "Rejected"
     approval_note: Optional[str] = None
+
+class DepartmentBase(BaseModel):
+    name: str
+
+class DepartmentCreate(DepartmentBase):
+    pass
+
+class DepartmentResponse(DepartmentBase):
+    department_id: int
+    class Config:
+        from_attributes = True
