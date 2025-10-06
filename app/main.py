@@ -15,6 +15,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    # allow_origins=["http://localhost:3000"],  # frontend origin
+    allow_origins=["https://leafront.vercel.app"], # frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],  # GET, POST, PUT, DELETE, OPTIONS
+    allow_headers=["*"],  # Authorization, Content-Type, etc.
+)
+
 @app.middleware("http")
 async def log_headers_middleware(request: Request, call_next):
     # We print this BEFORE the request is processed.
